@@ -80,3 +80,28 @@ export const getAllArticles = async (req, res) => {
     return res.status(500).json({ message: "Internal server error", error: err.message });
   }
 };
+
+export const deleteArticle = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json({ message: 'Article id is required' });
+
+    const article = await prisma.article.findUnique({ where: { id } });
+    if (!article) return res.status(404).json({ message: 'Article not found' });
+
+    const requesterId = req.user?.id;
+    const requesterRole = req.user?.role;
+
+    if (requesterId !== article.authorId && requesterRole !== 'ADMIN') {
+      return res.status(403).json({ message: 'Forbidden: not allowed to delete this article' });
+    }
+
+    const deleted = await prisma.article.delete({ where: { id } });
+
+    return res.json({ success: true, deleted });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error', error: err.message });
+  }
+};
