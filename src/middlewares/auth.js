@@ -18,7 +18,6 @@ export const authMiddleware = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // ensure the user referenced by the token still exists
     const userId = decoded?.id;
     if (!userId) {
       return res.status(401).json({ message: "Invalid token: missing user id" });
@@ -29,7 +28,6 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid token: user not found" });
     }
 
-    // attach minimal user info to request
     req.user = { id: user.id, email: user.email, role: user.role };
     return next();
   } catch (err) {
