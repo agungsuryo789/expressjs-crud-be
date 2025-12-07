@@ -9,6 +9,8 @@ MongoDB akan tersedia di mongodb://localhost:27017.
 
 ### Rename file .env.local ke .env
 
+## 1a. Tersedia backup mongodump di folder backup/mydb
+
 ## 2. Install Dependencies
 npm install
 
