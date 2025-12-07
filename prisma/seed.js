@@ -74,6 +74,7 @@ async function main() {
       content: "Project Alpha is a demonstration of our core platform and integrations.",
       liveUrl: "https://example.com/alpha",
       repoUrl: "https://github.com/example/alpha",
+      imageUrl: "https://picsum.photos/800/600",
       featured: true,
     },
     {
@@ -81,6 +82,9 @@ async function main() {
       slug: "project-beta",
       description: "An experimental project.",
       content: "Details about Project Beta and its outcomes.",
+      liveUrl: "https://example.com/alpha",
+      repoUrl: "https://github.com/example/alpha",
+      imageUrl: "https://picsum.photos/800/600",
       featured: false,
     },
   ];

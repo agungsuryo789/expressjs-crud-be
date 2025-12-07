@@ -2,7 +2,7 @@ import { prisma } from "../config/prisma.js";
 
 export const createProject = async (req, res) => {
   try {
-    const { title, slug, description, content, liveUrl, repoUrl, featured } =
+    const { title, slug, description, content, liveUrl, repoUrl, featured, imageUrl } =
       req.body;
 
     if (!title || !slug || !content || !description) {
@@ -23,6 +23,7 @@ export const createProject = async (req, res) => {
       featured: Boolean(featured),
       liveUrl: liveUrl ?? null,
       repoUrl: repoUrl ?? null,
+      imageUrl: imageUrl ?? "https://picsum.photos/800/600",
       author: { connect: { id: req.user.id } },
     };
 

@@ -1,17 +1,41 @@
-# expressjs-crud-be
+# Step Jalankan Project Express.js Backend
+## 1. Jalankan MongoDB dengan Docker
 
-Minimal Express.js CRUD backend scaffold
+### Jika belum punya MongoDB, jalankan container Docker:
 
-Setup (PowerShell):
+docker compose up -d
 
-```
-cd D:\Work\Personal\expressjs-crud-be
+MongoDB akan tersedia di mongodb://localhost:27017.
+
+### Rename file .env.local ke .env
+
+## 2. Install Dependencies
 npm install
-npm run dev   # starts with nodemon (auto-reload)
-```
 
-Test the health endpoint:
+## 3. Jalankan Seeder (opsional, untuk data awal)
+npm run seed
 
-```
-Invoke-RestMethod http://localhost:3000/
-```
+
+Seeder ini akan menambahkan data awal untuk artikel, project, dan user admin.
+
+## 4. Jalankan Development Server
+npm run dev
+
+
+# Server akan berjalan di:
+
+http://localhost:5000
+
+# Tentang Backend
+
+Backend ini digunakan untuk Admin Panel Website Company Profile dengan fitur:
+
+Authentication untuk login admin
+
+CRUD untuk:
+
+Artikel
+
+Project
+
+Menyediakan API untuk frontend mengelola data website

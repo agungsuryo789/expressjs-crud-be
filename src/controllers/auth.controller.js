@@ -53,7 +53,6 @@ export const me = async (req, res) => {
   }
 };
 
-// POST /reset-password (protected)
 export const resetPassword = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -65,7 +64,6 @@ export const resetPassword = async (req, res) => {
       return res.status(400).json({ message: 'currentPassword and newPassword are required' });
     }
 
-    // password policy
     const checks = [
       { re: /[a-z]/, msg: 'at least one lowercase letter' },
       { re: /[A-Z]/, msg: 'at least one uppercase letter' },

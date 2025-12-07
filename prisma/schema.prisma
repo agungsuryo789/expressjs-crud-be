@@ -55,6 +55,7 @@ model Project {
   content     String?
   liveUrl     String?
   repoUrl     String?
+  imageUrl    String?
   featured    Boolean  @default(false)
 
   authorId    String   @db.ObjectId
