@@ -105,3 +105,45 @@ export const deleteArticle = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error', error: err.message });
   }
 };
+
+export const updateArticle = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, slug, excerpt, content, published } = req.body;
+
+    if (!id) return res.status(400).json({ message: 'Article id is required' });
+
+    const article = await prisma.article.findUnique({ where: { id } });
+    if (!article) return res.status(404).json({ message: 'Article not found' });
+
+    const requesterId = req.user?.id;
+    const requesterRole = req.user?.role;
+    if (requesterId !== article.authorId && requesterRole !== 'ADMIN') {
+      return res.status(403).json({ message: 'Forbidden: not allowed to update this article' });
+    }
+
+    const data = {};
+    if (title !== undefined) data.title = title;
+    if (slug !== undefined && slug !== article.slug) {
+      const exists = await prisma.article.findUnique({ where: { slug } });
+      if (exists) return res.status(409).json({ message: 'Slug already in use' });
+      data.slug = slug;
+    }
+    if (excerpt !== undefined) data.excerpt = excerpt;
+    if (content !== undefined) data.content = content;
+    if (published !== undefined) {
+      data.published = Boolean(published);
+      data.publishedAt = Boolean(published) ? (article.publishedAt ?? new Date()) : null;
+    }
+
+    if (Object.keys(data).length === 0) {
+      return res.status(400).json({ message: 'No fields provided to update' });
+    }
+
+    const updated = await prisma.article.update({ where: { id }, data });
+    return res.json({ success: true, article: updated });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error', error: err.message });
+  }
+};
