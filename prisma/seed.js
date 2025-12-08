@@ -7,7 +7,7 @@ async function main() {
   const email = "admin@example.com";
   const password = "admin1234";
 
-  // cek apakah user sudah ada
+  // Seed Admin User
   let user = await prisma.user.findUnique({ where: { email } });
 
   if (!user) {
@@ -32,7 +32,8 @@ async function main() {
       title: "Welcome to Our Company",
       slug: "welcome-to-our-company",
       excerpt: "An introduction to our company and mission.",
-      content: "Welcome! This is the company blog. We do great things and serve our customers with pride.",
+      content:
+        "Welcome! This is the company blog. We do great things and serve our customers with pride.",
       published: true,
       publishedAt: new Date(),
     },
@@ -42,27 +43,26 @@ async function main() {
       excerpt: "Updates on our recent activities.",
       content: "Here are the latest updates from our team. Stay tuned for more news.",
       published: false,
+      publishedAt: null,
     },
   ];
 
   for (const a of articles) {
     const exists = await prisma.article.findUnique({ where: { slug: a.slug } });
+
     if (exists) {
-      console.log(`- Article '${a.slug}' already exists, skipping.`);
+      console.log(`⚠️ Article '${a.slug}' already exists, skipping.`);
       continue;
     }
+
     await prisma.article.create({
       data: {
-        title: a.title,
-        slug: a.slug,
-        excerpt: a.excerpt,
-        content: a.content,
-        published: a.published,
-        publishedAt: a.publishedAt,
+        ...a,
         author: { connect: { id: user.id } },
       },
     });
-    console.log(`+ Seeded article '${a.slug}'.`);
+
+    console.log(`📰 Seeded article '${a.slug}'.`);
   }
 
   // Seed Projects
@@ -82,8 +82,8 @@ async function main() {
       slug: "project-beta",
       description: "An experimental project.",
       content: "Details about Project Beta and its outcomes.",
-      liveUrl: "https://example.com/alpha",
-      repoUrl: "https://github.com/example/alpha",
+      liveUrl: "https://example.com/beta",
+      repoUrl: "https://github.com/example/beta",
       imageUrl: "https://picsum.photos/800/600",
       featured: false,
     },
@@ -91,30 +91,28 @@ async function main() {
 
   for (const p of projects) {
     const exists = await prisma.project.findUnique({ where: { slug: p.slug } });
+
     if (exists) {
-      console.log(`- Project '${p.slug}' already exists, skipping.`);
+      console.log(`⚠️ Project '${p.slug}' already exists, skipping.`);
       continue;
     }
+
     await prisma.project.create({
       data: {
-        title: p.title,
-        slug: p.slug,
-        description: p.description,
-        content: p.content,
-        liveUrl: p.liveUrl,
-        repoUrl: p.repoUrl,
-        featured: p.featured,
+        ...p,
         author: { connect: { id: user.id } },
       },
     });
-    console.log(`+ Seeded project '${p.slug}'.`);
+
+    console.log(`🚀 Seeded project '${p.slug}'.`);
   }
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
+  .catch((err) => {
+    console.error("❌ Error seeding data:", err);
   })
   .finally(async () => {
     await prisma.$disconnect();
+    console.log("🌱 Seeder finished & DB connection closed.");
   });
